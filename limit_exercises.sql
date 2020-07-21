@@ -51,4 +51,4 @@ ORDER BY birth_date, hire_date DESC
 LIMIT 5 OFFSET 45;
 
 -- LIMIT and OFFSET can be used to create multiple pages of data. What is the relationship between OFFSET (number of results to skip), LIMIT (number of results per page), and the page number?
--- In this context, LIMIT will set the number of records to include on each page. Records are zero-indexed, so as long as the offset is a multiple of the LIMIT, duplicate entries will not be made on multiple pages. The page number is equal to the following formula (OFFSET + LIMIT / LIMIT) 
+-- In this context, LIMIT will set the number of records to include on each page. Records are zero-indexed, so as long as the offset is a multiple of the LIMIT, duplicate entries will not be made on multiple pages. The page number is equal to the following formula (OFFSET + LIMIT) / LIMIT 
