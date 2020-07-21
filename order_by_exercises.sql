@@ -31,11 +31,6 @@ ORDER BY emp_no;
 -- Q6: Now reverse the sort order for both queries.
 SELECT *
 FROM employees
-WHERE first_name IN ('Irena','Vidya','Maya')
-ORDER BY last_name DESC, first_name DESC;
-
-SELECT *
-FROM employees
 WHERE last_name LIKE 'E%'
 ORDER BY emp_no DESC;
 
@@ -72,15 +67,32 @@ WHERE (
 	AND gender = 'M';
 	
 -- Find all employees whose last name starts or ends with 'E' — 30,723 rows.
+-- Q5: Update your queries for employees with 'E' in their last name to sort the results by their employee number. Your results should not change!
+-- Q6: Now reverse the sort order for both queries.
 SELECT *
 FROM employees
 WHERE last_name LIKE "E%"
-	OR last_name LIKE "%E";
-	
--- Duplicate the previous query and update it to find all employees whose last name starts and ends with 'E' — 899 rows.
+	OR last_name LIKE "%E"
+ORDER BY emp_no;
+
 SELECT *
 FROM employees
-WHERE last_name LIKE "E%E";
+WHERE last_name LIKE "E%"
+	OR last_name LIKE "%E"
+ORDER BY emp_no DESC;
+	
+-- Duplicate the previous query and update it to find all employees whose last name starts and ends with 'E' — 899 rows.
+-- Q5: Update your queries for employees with 'E' in their last name to sort the results by their employee number. Your results should not change!
+-- Q6: Now reverse the sort order for both queries.
+SELECT *
+FROM employees
+WHERE last_name LIKE "E%E"
+ORDER by emp_no;
+
+SELECT *
+FROM employees
+WHERE last_name LIKE "E%E"
+ORDER by emp_no DESC;
 
 -- Find all employees hired in the 90s and born on Christmas — 362 rows.
 -- Q7: Change the query for employees hired in the 90s and born on Christmas such that the first result is the oldest employee who was hired last. It should be Khun Bernini.
