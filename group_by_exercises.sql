@@ -42,8 +42,16 @@ FROM employees
 GROUP BY username
 ORDER BY username_count DESC;
 
--- how many duplicate usernames are there? 27,403
+-- how many duplicate usernames are there? 27,403 usernames have another username like their own, 13251 distinct duplicated usernames exist
 SELECT SUM(username_count) 
+FROM (
+		SELECT CONCAT(LOWER(SUBSTR(first_name, 1, 1)), LOWER(SUBSTR(last_name, 1, 4)), "_", SUBSTR(birth_date, 6, 2), SUBSTR(birth_date, 3, 2)) AS username, COUNT(*) as username_count
+		FROM employees
+		GROUP BY username
+) AS temp
+WHERE username_count >1;
+
+SELECT COUNT(username) 
 FROM (
 		SELECT CONCAT(LOWER(SUBSTR(first_name, 1, 1)), LOWER(SUBSTR(last_name, 1, 4)), "_", SUBSTR(birth_date, 6, 2), SUBSTR(birth_date, 3, 2)) AS username, COUNT(*) as username_count
 		FROM employees
