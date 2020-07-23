@@ -48,6 +48,5 @@ FROM (
 		SELECT CONCAT(LOWER(SUBSTR(first_name, 1, 1)), LOWER(SUBSTR(last_name, 1, 4)), "_", SUBSTR(birth_date, 6, 2), SUBSTR(birth_date, 3, 2)) AS username, COUNT(*) as username_count
 		FROM employees
 		GROUP BY username
-		ORDER BY username_count DESC
 ) AS temp
 WHERE username_count >1;
