@@ -229,7 +229,7 @@ FROM employees
 		ON dept_emp.dept_no = departments.dept_no
 	JOIN dept_manager
 		ON dept_manager.dept_no = dept_emp.dept_no
--- This subquery is a table that connects the manager name to their dept_no & emp_no
+-- The following subquery is a table that connects the current department manager name to their emp_no
 	JOIN(
 		SELECT employees.emp_no, CONCAT(employees.first_name, " ", employees.last_name) AS manager_name
 			FROM employees
