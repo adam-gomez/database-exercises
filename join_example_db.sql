@@ -220,31 +220,25 @@ WHERE salaries.to_date > curdate()
 ORDER BY salaries.salary DESC
 LIMIT 1;
 
--- Q10 BONUS: UNFINISHED
-SELECT DISTINCT CONCAT(employees.first_name, " ", employees.last_name) AS "Employee Name", departments.dept_name, department_manager AS "Manager Name"
-FROM titles
-	JOIN employees
-		ON titles.emp_no = employees.emp_no
-	JOIN dept_emp 
+-- Q10: Find the names of all current employees, their department name, and their current manager's name.
+SELECT CONCAT(employees.first_name, " ", employees.last_name) AS "Employee Name", departments.dept_name AS "Department Name", manager_name AS "Manager Name"
+FROM employees
+	JOIN dept_emp
 		ON employees.emp_no = dept_emp.emp_no
 	JOIN departments
 		ON dept_emp.dept_no = departments.dept_no
-	JOIN salaries
-		ON salaries.emp_no = employees.emp_no
 	JOIN dept_manager
-		ON dept_manager.emp_no = employees.emp_no
-	JOIN (SELECT departments.dept_name AS "Department Name", CONCAT(employees.first_name, " ", employees.last_name) AS "department_manager"
-FROM departments
-	JOIN dept_manager 
-		ON departments.dept_no = dept_manager.dept_no
-	JOIN employees
-		ON dept_manager.emp_no = employees.emp_no 
-WHERE dept_manager.to_date = "9999-01-01"
-ORDER BY departments.dept_name) AS manager_by_dept_table
-WHERE salaries.to_date > curdate()
-	AND titles.to_date > curdate()
+		ON dept_manager.dept_no = dept_emp.dept_no
+-- This subquery is a table that connects the manager name to their dept_no & emp_no
+	JOIN(
+		SELECT employees.emp_no, CONCAT(employees.first_name, " ", employees.last_name) AS manager_name
+			FROM employees
+				JOIN dept_manager
+					ON employees.emp_no = dept_manager.emp_no AND dept_manager.to_date > curdate()
+	) AS manager_names
+WHERE dept_manager.to_date > curdate()
 	AND dept_emp.to_date > curdate()
-ORDER BY dept_name;
+	AND dept_manager.emp_no = manager_names.emp_no;
 
 -- SuperTable of Current Employees
 SELECT *
