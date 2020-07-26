@@ -99,8 +99,8 @@ FROM salaries
 WHERE to_date > curdate();
 -- Step 5: Divide the output from step 3 (78 salaries) by the output of step 4 (240124) and multiply by 100
 -- 78/240124*100 = .0325%
--- The query below produces the number 78
-SELECT COUNT(*) 
+-- The query below gets the percentage, but "240124" in "COUNT(*)/240124*100" needs to be replaced by the value produced by a subquery 
+SELECT COUNT(*) AS "salaries_within_1_stddev_of_max", COUNT(*)/240124*100 AS "percentage_of_salaries_within_1_stddev_of_max" 
 FROM salaries
 WHERE salary > ((SELECT MAX(salary) FROM salaries) - (SELECT STD(salary) FROM salaries))
 	AND salary < ((SELECT MAX(salary) FROM salaries) + (SELECT STD(salary) FROM salaries))
