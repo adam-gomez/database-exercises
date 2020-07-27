@@ -73,8 +73,7 @@ CREATE TEMPORARY TABLE pay_comparison
 SELECT ed.dept_name, AVG(es.salary) AS "dept_average_salary"
 FROM employees.departments AS ed
 JOIN employees.dept_emp AS ede USING (dept_no)
-JOIN employees.employees AS ee ON ede.emp_no = ee.emp_no
-JOIN employees.salaries AS es ON es.emp_no = ee.emp_no
+JOIN employees.salaries AS es USING(emp_no)
 GROUP BY ed.dept_name;
 
 SELECT *
@@ -116,14 +115,12 @@ CREATE TEMPORARY TABLE pay_comparison_2
 SELECT ed.dept_name, AVG(es.salary) AS "dept_average_salary", AVG(es.salary) - (SELECT AVG(salary) FROM employees.salaries) AS "salary_diff", (AVG(es.salary) - (SELECT AVG(salary) FROM employees.salaries)) / (SELECT STD(salary) FROM employees.salaries) AS "salary_z_score"
 FROM employees.departments AS ed
 JOIN employees.dept_emp AS ede USING (dept_no)
-JOIN employees.employees AS ee USING (emp_no)
 JOIN employees.salaries AS es USING(emp_no)
 GROUP BY ed.dept_name;
 
 SELECT * FROM pay_comparison_2;
 
--- STEP 8: Now lets remove the dept_average_salary and salary_diff columns in our next temporary table
-
+-- STEP 8: Now lets remove the dept_average_salary and salary_diff columns in our next temporary table. 
 CREATE TEMPORARY TABLE pay_comparison_z_score_by_dept
 SELECT ed.dept_name, 
 		(AVG(es.salary) -- Average of the salary column, but since the query is grouping by dept_name, it becomes average per dept
@@ -134,7 +131,6 @@ SELECT ed.dept_name,
 		AS "salary_z_score"
 FROM employees.departments AS ed
 JOIN employees.dept_emp AS ede USING (dept_no)
-JOIN employees.employees AS ee USING (emp_no)
 JOIN employees.salaries AS es USING (emp_no)
 GROUP BY ed.dept_name;
 
@@ -144,3 +140,17 @@ FROM pay_comparison_z_score_by_dept;
 DROP TABLE pay_comparison;
 DROP TABLE pay_comparison_2;
 DROP TABLE pay_comparison_z_score_by_dept;
+
+-- Bonus Step: If we want to check the current averages and std. deviation... (WORK IN PROGRESS)
+CREATE TEMPORARY TABLE current_z_score_by_dept
+SELECT ed.dept_name, 
+		(AVG(es.salary) -- Average of the salary column, but since the query is grouping by dept_name, it becomes average per dept
+		- 
+		(SELECT AVG(salary) FROM employees.salaries)) -- Average of the entire salary column
+		/ 
+		(SELECT STD(salary) FROM employees.salaries) -- Standard deviation of the entire salary column
+		AS "salary_z_score"
+FROM employees.departments AS ed
+JOIN employees.dept_emp AS ede USING (dept_no)
+JOIN employees.salaries AS es USING (emp_no)
+GROUP BY ed.dept_name;
